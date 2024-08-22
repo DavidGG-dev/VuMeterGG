@@ -1,0 +1,21 @@
+
+__pycache__/
+
+# Environments
+.env/
+.venv/
+env/
+venv/
+_venv/
+
+# Logs
+logs/
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE specific files
+.vscode/
+.idea/
