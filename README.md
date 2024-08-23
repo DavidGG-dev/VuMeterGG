@@ -1,6 +1,7 @@
-[![Version](https://img.shields.io/github/v/release/DavidGG-dev/VuMeterGG)](https://github.com/DavidGG-dev/VuMeterGG/releases)
+[![Version](https://img.shields.io/github/v/release/DavidGG-dev/VuMeterGG?include_prereleases)](https://github.com/DavidGG-dev/VuMeterGG/releases)
 [![License](https://img.shields.io/badge/license-LGPLv3-blue.svg)](https://opensource.org/licenses/LGPL-3.0)
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/DavidGG-dev/VuMeterGG/issues)
+[![All Contributors](https://img.shields.io/github/all-contributors/DavidGG-dev/VuMeterGG?color=ee8449&style=flat-square)](#contributors)
 [![Code of Conduct](https://img.shields.io/badge/code%20of%20conduct-contributor%20covenant-ff69b4.svg)](CODE_OF_CONDUCT.md)
 # VuMeterGG
 
@@ -18,17 +19,16 @@ To use VuMeterGG, you need to add a widget to the window in QT Designer and then
 - PySide6-Essentials
 - shiboken6
 
-## AUTHORS
+## Contributors
 
-List of contributors to the project.
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
 
-### Maintainers
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
 
-- David García Gonzalez - <GitHub@davidgg.dev> - [GitHub](https://github.com/DavidGG-dev) - [LinkedIn](https://www.linkedin.com/in/davidgg-dev)
-
-### Contributors
-
-- 
+<!-- ALL-CONTRIBUTORS-LIST:END -->
 
 ## How to contribute
 Contributions are welcome! If you would like to contribute to this project, please follow these steps:
