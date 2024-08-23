@@ -24,6 +24,13 @@ To use VuMeterGG, you need to add a widget to the window in QT Designer and then
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/DavidGG-dev"><img src="https://avatars.githubusercontent.com/u/113294479?v=4?s=100" width="100px;" alt="David García González"/><br /><sub><b>David García González</b></sub></a><br /><a href="#maintenance-DavidGG-dev" title="Maintenance">🚧</a> <a href="#code-DavidGG-dev" title="Code">💻</a></td>
+    </tr>
+  </tbody>
+</table>
 
 <!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->

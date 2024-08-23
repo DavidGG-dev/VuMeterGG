@@ -1,4 +1,22 @@
 {
-  "projectName": "<VuMeterGG>",
-  "projectOwner": "<DavidGG-dev>"
+  "projectName": "VuMeterGG",
+  "projectOwner": "DavidGG-dev",
+  "files": [
+    "README.md"
+  ],
+  "commitType": "docs",
+  "commitConvention": "angular",
+  "contributorsPerLine": 7,
+  "contributors": [
+    {
+      "login": "DavidGG-dev",
+      "name": "David García González",
+      "avatar_url": "https://avatars.githubusercontent.com/u/113294479?v=4",
+      "profile": "https://github.com/DavidGG-dev",
+      "contributions": [
+        "maintenance",
+        "code"
+      ]
+    }
+  ]
 }
