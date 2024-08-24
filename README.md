@@ -5,6 +5,8 @@
 [![Code of Conduct](https://img.shields.io/badge/code%20of%20conduct-contributor%20covenant-ff69b4.svg)](CODE_OF_CONDUCT.md)
 # VuMeterGG
 
+![readme_cover](doc/images/readme_cover.png)
+
 VuMeterGG is a Qt Designer widget developed with PySide6. It captures audio from the microphone and displays it through a graphical representation.
 It includes many parameters to customize how the graphical representation of the sound is displayed and to calibrate it.
 
@@ -25,6 +27,9 @@ To configure the vu meter call the methods through the name you gave to the widg
 
 ## Config
 To configure the vu meter, call the methods through the name you gave to the widget or modify the attributes directly in the `vu_meter_gg.py` file.
+
+## Documentation
+A manual for version v0.1.0-beta is available in Spanish. You can download it [here](docs/manual_v0.1.0-beta_spanish.pdf).
 
 ## Requirements
 - PyAudio
