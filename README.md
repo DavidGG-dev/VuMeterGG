@@ -19,7 +19,9 @@ To use VuMeterGG, you need to add a widget to the window in QT Designer and then
 - PySide6-Essentials
 - shiboken6
 
-## Contributors
+## Contributors ✨
+
+Thanks go to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
@@ -36,6 +38,9 @@ To use VuMeterGG, you need to add a widget to the window in QT Designer and then
 <!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://allcontributors.org) specification.
+Contributions of any kind are welcome!
 
 ## How to contribute
 Contributions are welcome! If you would like to contribute to this project, please follow these steps:
