@@ -21,7 +21,7 @@ from PySide6.QtWidgets import (QApplication, QDial, QDoubleSpinBox, QFormLayout,
     QSizePolicy, QSlider, QSpacerItem, QSpinBox,
     QVBoxLayout, QWidget)
 
-from view.qt_ui.promoted.vumetro import PowerBar
+from view.qt_ui.promoted.vu_meter_gg import VuMeterGG
 import darkstyle_rc
 
 class Ui_Form(object):
@@ -2324,7 +2324,7 @@ class Ui_Form(object):
         self.frame_2.setFrameShadow(QFrame.Raised)
         self.verticalLayout = QVBoxLayout(self.frame_2)
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.vumetro = PowerBar(self.frame_2)
+        self.vumetro = VuMeterGG(self.frame_2)
         self.vumetro.setObjectName(u"vumetro")
 
         self.verticalLayout.addWidget(self.vumetro)

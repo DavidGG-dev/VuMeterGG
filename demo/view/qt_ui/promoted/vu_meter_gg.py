@@ -21,7 +21,7 @@ from PySide6.QtGui import QBrush, QPen, QColor, QFont, QPainter, QPainterPath, Q
 from PySide6.QtWidgets import QLCDNumber, QWidget
 
 
-class PowerBar(QWidget):
+class VuMeterGG(QWidget):
     ''' Clase que representa al módulo entero
 
     En esta clase se encuentra todos los atributos y funciones usadas

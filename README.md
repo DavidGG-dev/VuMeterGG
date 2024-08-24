@@ -9,8 +9,22 @@ VuMeterGG is a Qt Designer widget developed with PySide6. It captures audio from
 It includes many parameters to customize how the graphical representation of the sound is displayed and to calibrate it.
 
 ## Installation
+You can use VuMeterGG, directly with PySide6 in your Python project, or you can integrate it into your graphical interface by promoting custom widgets from Qt Designer.
 
-To use VuMeterGG, you need to add a widget to the window in QT Designer and then promote it by indicating the path to the VuMeterGG file.
+### QT Designer
+1. Place the `vu_meter_gg.py` file in your project. In the demo, it is located in `demo/view/qt_ui/promoted/vu_meter_gg.py`.
+2. From QT Designer, insert a `QWidget`.
+3. Promote the `QWidget` to `VuMeterGG`:
+   - Insert `VuMeterGG` in the name field.
+   - Use the file path without its extension in the header file field. In the demo, it is `view/qt_ui/promoted/vu_meter_gg`.
+
+### Directly
+Create an instance of `VuMeterGG` and place it in your layout.
+
+To configure the vu meter call the methods through the name you gave to the widget or modify the attributes directly from the vu_meter_gg.py file
+
+## Config
+To configure the vu meter, call the methods through the name you gave to the widget or modify the attributes directly in the `vu_meter_gg.py` file.
 
 ## Requirements
 - PyAudio
