@@ -17,11 +17,11 @@ You can use VuMeterGG, directly with PySide6 in your Python project, or you can 
 1. Place the `vu_meter_gg.py` file in your project. In the demo, it is located in `demo/view/qt_ui/promoted/vu_meter_gg.py`.
 2. From QT Designer, insert a `QWidget`.
 3. Promote the `QWidget` to `VuMeterGG`:
-   - Insert `VuMeterGG` in the name field.
+   - Insert `VUMeterGG` in the name field.
    - Use the file path without its extension in the header file field. In the demo, it is `view/qt_ui/promoted/vu_meter_gg`.
 
 ### Directly
-Create an instance of `VuMeterGG` and place it in your layout.
+Create an instance of `VUMeterGG` and place it in your layout.
 
 To configure the vu meter call the methods through the name you gave to the widget or modify the attributes directly from the vu_meter_gg.py file
 

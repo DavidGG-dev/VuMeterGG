@@ -2276,7 +2276,7 @@ PlotWidget {
         </property>
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
-          <widget class="VuMeterGG" name="vumetro" native="true"/>
+          <widget class="VUMeterGG" name="vumetro" native="true"/>
          </item>
         </layout>
        </widget>
@@ -3328,7 +3328,7 @@ PlotWidget {
  </widget>
  <customwidgets>
   <customwidget>
-   <class>VuMeterGG</class>
+   <class>VUMeterGG</class>
    <extends>QWidget</extends>
    <header>view.qt_ui.promoted.vu_meter_gg</header>
    <container>1</container>

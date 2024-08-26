@@ -21,7 +21,7 @@ from PySide6.QtGui import QBrush, QPen, QColor, QFont, QPainter, QPainterPath, Q
 from PySide6.QtWidgets import QLCDNumber, QWidget
 
 
-class VuMeterGG(QWidget):
+class VUMeterGG(QWidget):
     ''' Clase que representa al módulo entero
 
     En esta clase se encuentra todos los atributos y funciones usadas
@@ -31,143 +31,126 @@ class VuMeterGG(QWidget):
         QWidget (QWidget): Clase de la que hereda y que permite usarla como un widget
 
     Attributes:
-        RATE (int): Frecuencia de muestreo del audio
+        SAMPLE_RATE (int): Frecuencia de muestreo del audio
         INPUT_BLOCK_TIME (float): Tiempo que se tarda en captar el audio
         INPUT_FRAMES_PER_BLOCK (int): Numero de frames que se captan en el tiempo INPUT_BLOCK_TIME
-        encendido (bool): Indica si el vúmetro está activo
-        estiloVumetro (int): Indica el estilo de vúmetro que se quiere
-        directionVumetroBarras (int): Indica la dirección de las barras del vúmetro
-        number_bars (int): Numero de barras que se quieren mostrar
-        calibracion_db (int): Factor de escala que se le quiere aplicar al audio captado por el micrófono
-        range_detection (int): Rango máximo de volumen que se quiere representar gráficamente en el vúmetro
-        minimal_detection (int): Valor mínimo de detección del vúmetro
-        volumen (int): Volumen normalizado actual del vúmetro
-        espectroVolumen (list of int): Lista que guarda el espectro de volumen
-        padding_barras (int): Espacio entre la representación gráfica del audio y el borde del lienzo
-        solid_percent (float): Porcentaje de espacio entre barras
+        vu_meter_on (bool): Indica si el vúmetro está activo
+        vu_meter_style (int): Indica el estilo de vúmetro que se quiere
+        bars_direction (int): Indica la dirección de las barras del vúmetro
+        num_bars (int): Numero de barras que se quieren mostrar
+        calibration_db (int): Factor de escala que se le quiere aplicar al audio captado por el micrófono
+        max_detection_range (int): Rango máximo de volumen que se quiere representar gráficamente en el vúmetro
+        min_detection_level (int): Valor mínimo de detección del vúmetro
+        volume_level (int): Volumen normalizado actual del vúmetro
+        volume_spectrum (list of int): Lista que guarda el espectro de volumen
+        bars_padding (int): Espacio entre la representación gráfica del audio y el borde del lienzo
+        bars_solid_percentage (float): Porcentaje de espacio entre barras
         background_color (str): Color de fondo del vúmetro
-        bar_color (str): Color de la representación grafica del audio
-        actulizacionConfiguracion (bool): Controla que el estilo ESPECTRO se actualice correctamente al realizar cambios en la configuración
+        bars_color (str): Color de la representación grafica del audio
+        configuration_update (bool): Controla que el estilo ESPECTRO se actualice correctamente al realizar cambios en la configuración
     '''
-    RATE = 44000
+    SAMPLE_RATE = 44000
     INPUT_BLOCK_TIME = 0.1  
-    INPUT_FRAMES_PER_BLOCK = int(RATE*INPUT_BLOCK_TIME)
-    encendido = False
-    estiloVumetro = 0
-    directionVumetroBarras = 0
-    number_bars = 18
-    calibracion_db = 50
-    range_detection = 45
-    minimal_detection = 0
-    volumen = 0
-    espectroVolumen = [0] * number_bars
-    padding_barras = 5
-    solid_percent = 0.7
+    INPUT_FRAMES_PER_BLOCK = int(SAMPLE_RATE*INPUT_BLOCK_TIME)
+    vu_meter_on = False
+    vu_meter_style = 0
+    bars_direction = 0
+    num_bars = 18
+    calibration_db = 50
+    max_detection_range = 45
+    min_detection_level = 0
+    volume_level = 0
+    volume_spectrum = [0] * num_bars
+    bars_padding = 5
+    bars_solid_percentage = 0.7
     background_color = '#000000'
-    bar_color = ['#00BFFF']
-    actulizacionConfiguracion = False
+    bars_color = ['#00BFFF']
+    configuration_update = False
 
-    class EstiloVumetro(Enum):
+    class VUMeterStyle(Enum):
         '''Clase de Enum para elegir el tipo de vúmetro
 
             Args:
                 Enum (Enum): Clase de la que hereda para hacer una clase enum con constantes
 
             Attributes:
-                BARRAS (int): Indica que el estilo de vúmetro es el de barras
-                CIRCULOS (int): Indica que el estilo de vúmetro es el de círculos
-                ESPECTRO (int): Indica que el estilo de vúmetro es el de un espectrograma de audio
-                ANGULO (int): Indica que el estilo de vúmetro es el de ángulo
+                BARS (int): Indica que el estilo de vúmetro es el de barras
+                CIRCLES (int): Indica que el estilo de vúmetro es el de círculos
+                SPECTRUM (int): Indica que el estilo de vúmetro es el de un espectrograma de audio
+                ANGLE (int): Indica que el estilo de vúmetro es el de ángulo
         '''
-        BARRAS = 0
-        CIRCULOS = 1
-        ESPECTRO = 2
-        ANGULO = 3
+        BARS = 0
+        CIRCLES = 1
+        SPECTRUM = 2
+        ANGLE = 3
 
-    class DirectionVumetroBarras(Enum):
+    class VUMeterBarsDirection(Enum):
         '''Clase de Enum para elegir la dirección del vúmetro
             Args:
                 Enum (Enum): Clase de la que hereda para hacer una clase enum con constantes
 
             Attributes:
-                ARRIBA (int): Indica que la dirección del vúmetro es hacia arriba
-                DERECHA (int): Indica que la dirección del vúmetro es hacia la derecha
-                ABAJO (int): Indica que la dirección del vúmetro es hacia abajo
-                IZQUIERDA (int): Indica que la dirección del vúmetro es hacia la izquierda
+                UP (int): Indica que la dirección del vúmetro es hacia arriba
+                RIGHT (int): Indica que la dirección del vúmetro es hacia la derecha
+                DOWN (int): Indica que la dirección del vúmetro es hacia abajo
+                LEFT (int): Indica que la dirección del vúmetro es hacia la izquierda
         '''
-        ARRIBA = 0
-        DERECHA = 1
-        ABAJO = 2
-        IZQUIERDA = 3
+        UP = 0
+        RIGHT = 1
+        DOWN = 2
+        LEFT = 3
 
     def __init__(self, *args, **kwargs):
         '''Llama a dos funciones para crear un objeto QLCDNumber e inicializa el vúmetro'''
         super().__init__(*args, **kwargs)
         self.__init__lcd()
-        self.activar_vumetro()
+        self.activate_vu_meter()
 
     def __init__lcd(self):
-        self.lcd_volumen = QLCDNumber()
-        self.lcd_volumen.setObjectName(u"lcd_volumen")
-        self.lcd_volumen.setMinimumSize(QSize(0, 23))
+        self.lcd_volume = QLCDNumber()
+        self.lcd_volume.setObjectName(u"lcd_volume")
+        self.lcd_volume.setMinimumSize(QSize(0, 23))
         font = QFont()
         font.setBold(False)
-        self.lcd_volumen.setFont(font)
-        self.lcd_volumen.setStyleSheet(u"")
-        self.lcd_volumen.setDigitCount(3)
-        self.lcd_volumen.setSegmentStyle(QLCDNumber.Flat)
-        self.lcd_volumen.setProperty("intValue", 0)
+        self.lcd_volume.setFont(font)
+        self.lcd_volume.setStyleSheet(u"")
+        self.lcd_volume.setDigitCount(3)
+        self.lcd_volume.setSegmentStyle(QLCDNumber.Flat)
+        self.lcd_volume.setProperty("intValue", 0)
 
-    def activar_vumetro(self):
-        '''Activa el vúmetro.
-
-        Si el vúmetro no está ya activo, inicia un nuevo hilo que ejecuta el método start_audio_capture del vúmetro
-        '''
-        if not self.encendido:
-            hilo_vumetro = threading.Thread(target=self.start_audio_capture)
-            hilo_vumetro.start()
-            self.encendido = True
-
-    def desactivar_vumetro(self):
-        '''Detiene el vúmetro
-
-        Establece la variable encendido a False para que el hilo que ejecuta el método start_audio_capture del vúmetro termine
-        '''
-        self.encendido = False
-
-    def get_volumen(self) -> int:
+    def get_volume_level(self) -> int:
         """Obtiene el volumen normalizado actual del vúmetro
 
         Returns:
             int: El volumen actual del vúmetro
         """
-        return self.volumen
+        return self.volume_level
 
-    def set_lcd_calibrarDB(self, db: int):
+    def set_lcd_calibration_db(self, calibration_db: int):
         """Cambia el factor de escala que se usa para normalizar el volumen
 
         Esto sirve para calibrar el micrófono y que el valor calculado se aproxime lo máximo posible al real
 
         Args:
-            db (int): Factor de escala que se le quiere aplicar al audio captado por el micrófono
+            calibration_db (int): Factor de escala que se le quiere aplicar al audio captado por el micrófono
         """
-        if db < 1:
-            db = 1
-        self.calibracion_db = db
+        if calibration_db < 1:
+            calibration_db = 1
+        self.calibration_db = calibration_db
 
-    def set_lcd_calibrarRango(self, rango: int):
+    def set_max_calibration_range(self, max_detection_range: int):
         """Cambia rango máximo de volumen que se quiere representar gráficamente en el vúmetro
 
         Esto sirve para calibrar el vúmetro y que muestre el rango de volumen que se desee, apreciando más o menos detalle en la variación de volumen en la representación grafica.
 
         Args:
-            rango (int): Range máximo de volumen que se quiere representar gráficamente en el vúmetro
+            max_detection_range (int): Range máximo de volumen que se quiere representar gráficamente en el vúmetro
         """
-        if rango < 1:
-            rango = 1
-        self.range_detection = rango
+        if max_detection_range < 1:
+            max_detection_range = 1
+        self.detection_range = max_detection_range
 
-    def setBackgroundColor(self, color: str):
+    def set_background_color(self, color: str):
         """Cambia el color de fondo del vúmetro
 
         El método recibe un String con el color en formato hexadecimal y lo establece como el color de fondo del vúmetro
@@ -180,10 +163,10 @@ class VuMeterGG(QWidget):
         if not re.match('^#(?:[0-9a-fA-F]{3}){1,2}$', color):
             return
         self.background_color = color
-        self.actulizacionConfiguracion = True
+        self.configuration_update = True
         self.update()
 
-    def setBarColor(self, color: str):
+    def set_bars_color(self, color: str):
         """Cambia el color del vúmetro
 
         Cambia el color de la representación gráfica del audio captado por el micrófono
@@ -202,26 +185,26 @@ class VuMeterGG(QWidget):
             array_color[i] = array_color[i].strip()
             if not re.match('^#(?:[0-9a-fA-F]{3}){1,2}$', array_color[i]):
                 return
-        self.bar_color = array_color
-        self.actulizacionConfiguracion = True
+        self.bars_color = array_color
+        self.configuration_update = True
         self.update()
 
-    def setStep(self, step: int):
+    def set_max_elements(self, elements: int):
         """Recibe el número de máximo elementos que se quieren mostrar en el vúmetro
 
         En el caso del estilo vúmetro barras, este número indica el número máximo de barras que se quieren mostrar
 
         Args:
-            step (int): número de elementos que representan el volumen
+            elements (int): número de elementos que representan el volumen
         """
-        if step < 1:
-            step = 1
-        self.number_bars = step
-        self.espectroVolumen = [0] * step
-        self.actulizacionConfiguracion = True
+        if elements < 1:
+            elements = 1
+        self.num_bars = elements
+        self.volume_spectrum = [0] * elements
+        self.configuration_update = True
         self.update()
 
-    def setSolidPercent(self, percent: float):
+    def set_solid_percentage(self, percent: float):
         '''Cambia el porcentaje de espacio entre barras
 
         Este método recibe un numero entre 0 y 1 que indica el porcentaje de espacio que se quiere entre las barras del vúmetro
@@ -233,49 +216,38 @@ class VuMeterGG(QWidget):
             percent = 0.1
         elif percent > 0.9:
             percent = 0.9
-        self.solid_percent = percent
-        self.actulizacionConfiguracion = True
+        self.bars_solid_percentage = percent
+        self.configuration_update = True
         self.update()
 
-    def changeStyleVumetro(self, estilo: EstiloVumetro):
-        '''Cambia el estilo del vúmetro
-
-        Este método recibe un objeto de la clase EstiloVumetro que indica el estilo que se quiere para el vúmetro
-
-        Args:
-            estilo (EstiloVumetro): Estilo que se quiere para el vúmetro
-        '''
-        self.estiloVumetro = estilo.value
-        self.update()
-
-    def setDirectionVumetroBarras(self, direction: DirectionVumetroBarras):
+    def set_bars_direction(self, direction: VUMeterBarsDirection):
         '''Cambia la dirección del vúmetro en los estilos que permiten esta configuración
 
-        Este método recibe un objeto de la clase DirectionVumetroBarras que indica la dirección que desde donde parte la representación grafica del audio
+        Este método recibe un objeto de la clase VUMeterBarsDirection que indica la dirección que desde donde parte la representación grafica del audio
 
         Args:
-            direction (DirectionVumetroBarras): Dirección del vúmetro
+            direction (VUMeterBarsDirection): Dirección del vúmetro
         '''
-        self.directionVumetroBarras = direction.value
-        self.actulizacionConfiguracion = True
+        self.bars_direction = direction.value
+        self.configuration_update = True
         self.update()
 
-    def setMinDetection(self, minimal: int):
+    def set_min_detection_level(self, min_detection_level: int):
         '''Cambia el valor mínimo de detección del vúmetro
 
         Cambia el valor mínimo de detección del vúmetro, es decir, el valor mínimo que se quiere que se represente gráficamente
 
         Args:
-            minimal (int): Valor mínimo de detección del vúmetro
+            min_detection_level (int): Valor mínimo de detección del vúmetro
         '''
-        if minimal < 0:
-            minimal = 0
+        if min_detection_level < 0:
+            min_detection_level = 0
 
-        self.minimal_detection = minimal
-        self.actulizacionConfiguracion = True
+        self.min_detection_level = min_detection_level
+        self.configuration_update = True
         self.update()
 
-    def set_vumeter_speed(self, speed: int):
+    def set_detection_speed(self, speed: int):
         '''Cambia la velocidad de detección del vúmetro
 
         Cambia la velocidad de detección del vúmetro, es decir, el tiempo que se tarda en actualizar la representación grafica del audio
@@ -289,75 +261,38 @@ class VuMeterGG(QWidget):
             speed = 25
 
         self.INPUT_BLOCK_TIME = float(speed) / 100
-        self.INPUT_FRAMES_PER_BLOCK = int(self.RATE * self.INPUT_BLOCK_TIME)
+        self.INPUT_FRAMES_PER_BLOCK = int(self.SAMPLE_RATE * self.INPUT_BLOCK_TIME)
 
-    def calculate_volume(self, audio_data):
-        '''Método que calcula el volumen del audio captado por el micrófono
+    def activate_vu_meter(self):
+        '''Activa el vúmetro.
+
+        Si el vúmetro no está ya activo, inicia un nuevo hilo que ejecuta el método _start_audio_capture del vúmetro
+        '''
+        if not self.vu_meter_on:
+            hilo_vumetro = threading.Thread(target=self._start_audio_capture)
+            hilo_vumetro.start()
+            self.vu_meter_on = True
+
+    def deactivate_vu_meter(self):
+        '''Detiene el vúmetro
+
+        Establece la variable vu_meter_on a False para que el hilo que ejecuta el método _start_audio_capture del vúmetro termine
+        '''
+        self.vu_meter_on = False
+
+    def change_vu_meter_style(self, style: VUMeterStyle):
+        '''Cambia el estilo del vúmetro
+
+        Este método recibe un objeto de la clase VUMeterStyle que indica el estilo que se quiere para el vúmetro
 
         Args:
-            audio_data (bytes): Datos de audio captados por el micrófono
+            style (VUMeterStyle): Estilo que se quiere para el vúmetro
         '''
-        NORMALIZE_FACTOR = 1.0 / 32768.0
-        num_samples = len(audio_data) / 2
-        audio_samples = struct.unpack("%dh" %num_samples, audio_data)
-        sum_of_squares = sum((s * NORMALIZE_FACTOR) ** 2 for s in audio_samples)
-        return math.sqrt(sum_of_squares / num_samples)
-
-    def start_audio_capture(self):
-        '''Método que se ejecuta en un hilo para captar el audio del micrófono y calcular el volumen
-
-        Este método se ejecuta en un hilo para que no bloquee la interfaz gráfica y pueda seguir funcionando mientras se captura el audio del micrófono y se calcula el volumen
-
-        El método usa la librería PyAudio para captar el audio del micrófono y la clase Amplitude para calcular el volumen del audio captado
-
-        El volumen calculado se asigna al QLCDNumber self.lcd_volumen y se actualiza la representación gráfica del audio en el vúmetro
-
-        El método termina cuando la variable encendido es False
-
-        Llama a la función update para actualizar la representación gráfica del audio en el vúmetro
-        '''
-        audio = pyaudio.PyAudio()
-        try:
-
-            stream = audio.open(format=pyaudio.paInt16,
-                                channels=1,
-                                rate=self.RATE,
-                                input=True,
-                                frames_per_buffer=self.INPUT_FRAMES_PER_BLOCK,
-                                )
-
-            max_amplitude  = 0
-            while True:
-                if not self.encendido:
-                    return
-
-                try:
-                    audio_data = stream.read(self.INPUT_FRAMES_PER_BLOCK)
-
-                    current_amplitude = self.calculate_volume(audio_data)
-
-                    if current_amplitude > max_amplitude :
-                        max_amplitude  = current_amplitude
-
-                    self.volumen = int(current_amplitude * self.calibracion_db)
-                    print(self.volumen)
-                    self.lcd_volumen.display(self.volumen)
-                    self.update()
-
-                except IOError as e:
-                    print(f"Error al leer el audio: {e}")
-                    continue
-
-        except Exception as e:
-            print(f"Error al abrir el stream de audio: {e}")
-
-        finally:
-            stream.stop_stream()
-            stream.close()
-            audio.terminate()
+        self.vu_meter_style = style.value
+        self.update()
 
     def paintEvent(self, e):
-        '''Método que se ejecuta cuando se quiere actualizar la representación gráfica del vúmetro
+        '''Método sobrescrito de QWidget para actualizar la representación gráfica del vúmetro
 
         El método pinta la representación gráfica del audio en el vúmetro según el estilo que se haya elegido
 
@@ -374,38 +309,103 @@ class VuMeterGG(QWidget):
         rect = QRect(0, 0, painter.device().width(), painter.device().height())
         painter.fillRect(rect, brush)
 
-        if self.volumen > self.range_detection:
-            volumen_con_tope = self.range_detection
+        if self.volume_level > self.max_detection_range:
+            volumen_con_tope = self.max_detection_range
         else:
-            volumen_con_tope = self.volumen
+            volumen_con_tope = self.volume_level
 
-        if (self.range_detection <= self.minimal_detection or self.volumen <= self.minimal_detection) and self.estiloVumetro != 2:
+        if (self.max_detection_range <= self.min_detection_level or self.volume_level <= self.min_detection_level) and self.vu_meter_style != 2:
             # painter.end()
             return
 
-        if self.range_detection <= self.minimal_detection or self.volumen < self.minimal_detection:
-            volumen_con_tope = self.minimal_detection
+        if self.max_detection_range <= self.min_detection_level or self.volume_level < self.min_detection_level:
+            volumen_con_tope = self.min_detection_level
 
-        volumen_normalizado = (volumen_con_tope - self.minimal_detection) / \
-            (self.range_detection - self.minimal_detection)
-        n_steps_to_draw = int(volumen_normalizado * self.number_bars)
+        volumen_normalizado = (volumen_con_tope - self.min_detection_level) / \
+            (self.max_detection_range - self.min_detection_level)
+        num_elements_to_draw = int(volumen_normalizado * self.num_bars)
 
         # dimensiones del lienzo
-        d_height = painter.device().height() - (self.padding_barras * 2)
-        d_width = painter.device().width() - (self.padding_barras * 2)
+        d_height = painter.device().height() - (self.bars_padding * 2)
+        d_width = painter.device().width() - (self.bars_padding * 2)
 
-        if self.estiloVumetro == 0:
-            self.pintar_barras(painter, d_height, d_width, n_steps_to_draw, brush)
-        elif self.estiloVumetro == 1:
-            self.pintar_circulos(painter, d_height, d_width, n_steps_to_draw)
-        elif self.estiloVumetro == 2:
-            self.pintar_espectro(painter, d_height, d_width, brush, volumen_normalizado)
-        elif self.estiloVumetro == 3:
-            self.pintar_angulo(painter, d_height, d_width, volumen_normalizado)
+        if self.vu_meter_style == 0:
+            self._paint_bars(painter, d_height, d_width, num_elements_to_draw, brush)
+        elif self.vu_meter_style == 1:
+            self._paint_circles(painter, d_height, d_width, num_elements_to_draw)
+        elif self.vu_meter_style == 2:
+            self._paint_spectrum(painter, d_height, d_width, brush, volumen_normalizado)
+        elif self.vu_meter_style == 3:
+            self._paint_angle(painter, d_height, d_width, volumen_normalizado)
 
         painter.end()
 
-    def pintar_barras(self, painter: QPainter, d_height: int, d_width: int, n_steps_to_draw: int, brush: QBrush):
+    def _calculate_volume(self, audio_data):
+        '''Método que calcula el volumen del audio captado por el micrófono
+
+        Args:
+            audio_data (bytes): Datos de audio captados por el micrófono
+        '''
+        NORMALIZE_FACTOR = 1.0 / 32768.0
+        num_samples = len(audio_data) / 2
+        audio_samples = struct.unpack("%dh" %num_samples, audio_data)
+        sum_of_squares = sum((s * NORMALIZE_FACTOR) ** 2 for s in audio_samples)
+        return math.sqrt(sum_of_squares / num_samples)
+
+    def _start_audio_capture(self):
+        '''Método que se ejecuta en un hilo para captar el audio del micrófono y calcular el volumen
+
+        Este método se ejecuta en un hilo para que no bloquee la interfaz gráfica y pueda seguir funcionando mientras se captura el audio del micrófono y se calcula el volumen
+
+        El método usa la librería PyAudio para captar el audio del micrófono y la clase Amplitude para calcular el volumen del audio captado
+
+        El volumen calculado se asigna al QLCDNumber self.lcd_volume y se actualiza la representación gráfica del audio en el vúmetro
+
+        El método termina cuando la variable vu_meter_on es False
+
+        Llama a la función update para actualizar la representación gráfica del audio en el vúmetro
+        '''
+        audio = pyaudio.PyAudio()
+        try:
+
+            stream = audio.open(format=pyaudio.paInt16,
+                                channels=1,
+                                rate=self.SAMPLE_RATE,
+                                input=True,
+                                frames_per_buffer=self.INPUT_FRAMES_PER_BLOCK,
+                                )
+
+            max_amplitude  = 0
+            while True:
+                if not self.vu_meter_on:
+                    return
+
+                try:
+                    audio_data = stream.read(self.INPUT_FRAMES_PER_BLOCK)
+
+                    current_amplitude = self._calculate_volume(audio_data)
+
+                    if current_amplitude > max_amplitude :
+                        max_amplitude  = current_amplitude
+
+                    self.volume_level = int(current_amplitude * self.calibration_db)
+                    print(self.volume_level)
+                    self.lcd_volume.display(self.volume_level)
+                    self.update()
+
+                except IOError as e:
+                    print(f"Error al leer el audio: {e}")
+                    continue
+
+        except Exception as e:
+            print(f"Error al abrir el stream de audio: {e}")
+
+        finally:
+            stream.stop_stream()
+            stream.close()
+            audio.terminate()
+
+    def _paint_bars(self, painter: QPainter, d_height: int, d_width: int, num_elements_to_draw: int, brush: QBrush):
         '''Pinta la representación gráfica del audio en el vúmetro según el estilo de barras
 
         Este método pinta la representación gráfica del audio en el vúmetro según el estilo de barras y las variables de configuración del vúmetro que se hayan elegido
@@ -414,62 +414,62 @@ class VuMeterGG(QWidget):
             painter (QPainter): Objeto que se usa para pintar la representación gráfica del audio en el vúmetro
             d_height (int): Altura del lienzo
             d_width (int): Ancho del lienzo
-            n_steps_to_draw (int): Numero de barras que se quieren pintar
+            num_elements_to_draw (int): Numero de barras que se quieren pintar
             brush (QBrush): Pincel que se usa para pintar la representación gráfica del audio en el vúmetro
         '''
         # divisiones del lienzo
-        step_size_vertical = d_height / self.number_bars
-        setp_size_horizontal = d_width / self.number_bars
+        step_size_vertical = d_height / self.num_bars
+        setp_size_horizontal = d_width / self.num_bars
         # alto barras
-        bar_height_vertical = step_size_vertical * self.solid_percent
-        bar_height_horizontal = setp_size_horizontal * self.solid_percent
+        bar_height_vertical = step_size_vertical * self.bars_solid_percentage
+        bar_height_horizontal = setp_size_horizontal * self.bars_solid_percentage
         # Espacio entre barras
         bar_spacer_vertical = (step_size_vertical - bar_height_vertical) / 2
         bar_spacer_horizontal = (
             setp_size_horizontal - bar_height_horizontal) / 2
 
-        for n in range(n_steps_to_draw):
-            nextColor = (int)(n // (self.number_bars / len(self.bar_color)))
+        for n in range(num_elements_to_draw):
+            nextColor = (int)(n // (self.num_bars / len(self.bars_color)))
             # Un color por barra
-            brush.setColor(QColor(self.bar_color[nextColor]))
-            if self.directionVumetroBarras == 0:
+            brush.setColor(QColor(self.bars_color[nextColor]))
+            if self.bars_direction == 0:
                 rect = QRect(
-                    self.padding_barras,
-                    self.padding_barras + d_height -
+                    self.bars_padding,
+                    self.bars_padding + d_height -
                     ((n+1) * step_size_vertical) + bar_spacer_vertical,
                     d_width,
                     bar_height_vertical
                 )
                 painter.fillRect(rect, brush)
-            elif self.directionVumetroBarras == 1:
+            elif self.bars_direction == 1:
                 rect = QRect(
-                    self.padding_barras + (n * setp_size_horizontal) +
+                    self.bars_padding + (n * setp_size_horizontal) +
                     bar_spacer_horizontal,
-                    self.padding_barras,
+                    self.bars_padding,
                     bar_height_horizontal,
                     d_height
                 )
                 painter.fillRect(rect, brush)
-            elif self.directionVumetroBarras == 2:
+            elif self.bars_direction == 2:
                 rect = QRect(
-                    self.padding_barras,
-                    self.padding_barras + (n * step_size_vertical) +
+                    self.bars_padding,
+                    self.bars_padding + (n * step_size_vertical) +
                     bar_spacer_vertical,
                     d_width,
                     bar_height_vertical
                 )
                 painter.fillRect(rect, brush)
-            elif self.directionVumetroBarras == 3:
+            elif self.bars_direction == 3:
                 rect = QRect(
-                    self.padding_barras + d_width -
+                    self.bars_padding + d_width -
                     ((n+1) * setp_size_horizontal) + bar_spacer_horizontal,
-                    self.padding_barras,
+                    self.bars_padding,
                     bar_height_horizontal,
                     d_height
                 )
                 painter.fillRect(rect, brush)
 
-    def pintar_circulos(self, painter: QPainter, d_height: int, d_width: int, n_steps_to_draw: int):
+    def _paint_circles(self, painter: QPainter, d_height: int, d_width: int, num_elements_to_draw: int):
         '''Pinta la representación gráfica del audio en el vúmetro según el estilo de círculos
 
         Este método pinta la representación gráfica del audio en el vúmetro según el estilo de círculos y las variables de configuración del vúmetro que se hayan elegido
@@ -478,20 +478,20 @@ class VuMeterGG(QWidget):
             painter (QPainter): Objeto que se usa para pintar la representación gráfica del audio en el vúmetro
             d_height (int): Altura del lienzo
             d_width (int): Ancho del lienzo
-            n_steps_to_draw (int): Numero de círculos que se quieren pintar
+            num_elements_to_draw (int): Numero de círculos que se quieren pintar
         '''
-        diametroMax = min(d_height, d_width) - 2 * self.padding_barras
-        step_size = (diametroMax/2) / self.number_bars
-        width_pen = step_size * self.solid_percent
+        diametroMax = min(d_height, d_width) - 2 * self.bars_padding
+        step_size = (diametroMax/2) / self.num_bars
+        width_pen = step_size * self.bars_solid_percentage
         width_spacer = step_size - width_pen
         pen = QPen()
         pen.setWidth(width_pen)
-        centroX = d_width / 2 + 2 * self.padding_barras
-        centroY = d_height / 2 + 2 * self.padding_barras
+        centroX = d_width / 2 + 2 * self.bars_padding
+        centroY = d_height / 2 + 2 * self.bars_padding
 
-        for n in range(n_steps_to_draw):
-            nextColor = (int)(n // (self.number_bars / len(self.bar_color)))
-            pen.setColor(QColor(self.bar_color[nextColor]))
+        for n in range(num_elements_to_draw):
+            nextColor = (int)(n // (self.num_bars / len(self.bars_color)))
+            pen.setColor(QColor(self.bars_color[nextColor]))
             painter.setPen(pen)
             painter.drawEllipse(
                 centroX - (n+1) * width_pen - n * width_spacer,
@@ -500,7 +500,7 @@ class VuMeterGG(QWidget):
                 (2*n+1) * width_pen + (2*n) * width_spacer
             )
 
-    def pintar_espectro(self, painter: QPainter, d_height: int, d_width: int, brush: QBrush, volumen_normalizado: float):
+    def _paint_spectrum(self, painter: QPainter, d_height: int, d_width: int, brush: QBrush, volumen_normalizado: float):
         '''Pinta la representación gráfica del audio en el vúmetro según el estilo de espectro
 
         Este método pinta la representación gráfica del audio en el vúmetro según el estilo de espectro y las variables de configuración del vúmetro que se hayan elegido
@@ -513,11 +513,11 @@ class VuMeterGG(QWidget):
             volumen_normalizado (float): Volumen a mostrar escalado entre cero y uno
         '''
         # divisiones del lienzo
-        step_size_vertical = d_height / self.number_bars
-        setp_size_horizontal = d_width / self.number_bars
+        step_size_vertical = d_height / self.num_bars
+        setp_size_horizontal = d_width / self.num_bars
         # alto barras
-        bar_height_vertical = step_size_vertical * self.solid_percent
-        bar_height_horizontal = setp_size_horizontal * self.solid_percent
+        bar_height_vertical = step_size_vertical * self.bars_solid_percentage
+        bar_height_horizontal = setp_size_horizontal * self.bars_solid_percentage
         # Espacio entre barras
         bar_spacer_vertical = (step_size_vertical - bar_height_vertical) / 2
         bar_spacer_horizontal = (
@@ -525,53 +525,53 @@ class VuMeterGG(QWidget):
 
         centroX = d_width / 2
         centroY = d_height / 2
-        if not self.actulizacionConfiguracion:
-            self.espectroVolumen.pop(0)
-            self.espectroVolumen.append(volumen_normalizado+0.01)
-        self.actulizacionConfiguracion = False
+        if not self.configuration_update:
+            self.volume_spectrum.pop(0)
+            self.volume_spectrum.append(volumen_normalizado+0.01)
+        self.configuration_update = False
 
-        for n in range(len(self.espectroVolumen)):
-            nextColor = (int)(n // (self.number_bars / len(self.bar_color)))
+        for n in range(len(self.volume_spectrum)):
+            nextColor = (int)(n // (self.num_bars / len(self.bars_color)))
             # Un color por barra
-            brush.setColor(QColor(self.bar_color[nextColor]))
-            if self.directionVumetroBarras == 0:
+            brush.setColor(QColor(self.bars_color[nextColor]))
+            if self.bars_direction == 0:
                 rect = QRect(
-                    centroX - (self.espectroVolumen[n] * centroX),
-                    self.padding_barras +
+                    centroX - (self.volume_spectrum[n] * centroX),
+                    self.bars_padding +
                     (n * step_size_vertical) + bar_spacer_vertical,
-                    self.espectroVolumen[n] * d_width,
+                    self.volume_spectrum[n] * d_width,
                     bar_height_vertical
                 )
                 painter.fillRect(rect, brush)
-            elif self.directionVumetroBarras == 1:
+            elif self.bars_direction == 1:
                 rect = QRect(
-                    self.padding_barras + d_width - ((n+1) * setp_size_horizontal) +
+                    self.bars_padding + d_width - ((n+1) * setp_size_horizontal) +
                     bar_spacer_horizontal,
-                    centroY - (self.espectroVolumen[n] * centroY),
+                    centroY - (self.volume_spectrum[n] * centroY),
                     bar_height_horizontal,
-                    self.espectroVolumen[n] * d_height
+                    self.volume_spectrum[n] * d_height
                 )
                 painter.fillRect(rect, brush)
-            elif self.directionVumetroBarras == 2:
+            elif self.bars_direction == 2:
                 rect = QRect(
-                    centroX - (self.espectroVolumen[n] * centroX),
-                    self.padding_barras + d_height -
+                    centroX - (self.volume_spectrum[n] * centroX),
+                    self.bars_padding + d_height -
                     ((n+1) * step_size_vertical) + bar_spacer_vertical,
-                    self.espectroVolumen[n] * d_width,
+                    self.volume_spectrum[n] * d_width,
                     bar_height_vertical
                 )
                 painter.fillRect(rect, brush)
-            elif self.directionVumetroBarras == 3:
+            elif self.bars_direction == 3:
                 rect = QRect(
-                    self.padding_barras + (n * setp_size_horizontal) +
+                    self.bars_padding + (n * setp_size_horizontal) +
                     bar_spacer_horizontal,
-                    centroY - (self.espectroVolumen[n] * centroY),
+                    centroY - (self.volume_spectrum[n] * centroY),
                     bar_height_horizontal,
-                    self.espectroVolumen[n] * d_height
+                    self.volume_spectrum[n] * d_height
                 )
                 painter.fillRect(rect, brush)
 
-    def pintar_angulo(self, painter: QPainter, d_height: int, d_width: int, volumen_normalizado: float):
+    def _paint_angle(self, painter: QPainter, d_height: int, d_width: int, volumen_normalizado: float):
         '''Pinta la representación gráfica del audio en el vúmetro según el estilo de ángulo
 
         Este método pinta la representación gráfica del audio en el vúmetro según el estilo de ángulo y las variables de configuración del vúmetro que se hayan elegido
@@ -582,28 +582,28 @@ class VuMeterGG(QWidget):
             d_width (int): Ancho del lienzo
             volumen_normalizado (float): Volumen a mostrar escalado entre cero y uno
             '''
-        diametroMax = min(d_height, d_width) - 2 * self.padding_barras
-        center = QPoint(d_width / 2 + self.padding_barras,
-                        d_height / 2 + self.padding_barras)
-        boundingRect = QRectF(d_width / 2 + self.padding_barras - diametroMax / 2, d_height / 2 + self.padding_barras - diametroMax / 2, diametroMax, diametroMax)
+        diametroMax = min(d_height, d_width) - 2 * self.bars_padding
+        center = QPoint(d_width / 2 + self.bars_padding,
+                        d_height / 2 + self.bars_padding)
+        boundingRect = QRectF(d_width / 2 + self.bars_padding - diametroMax / 2, d_height / 2 + self.bars_padding - diametroMax / 2, diametroMax, diametroMax)
         startAngle = 0
         finalAngle = volumen_normalizado * 360
-        sweepLength = 360 / self.number_bars
+        sweepLength = 360 / self.num_bars
         cantidad_pintado = int(finalAngle / sweepLength)
 
         for i in range(cantidad_pintado):
-            nextColor = (int)(i // (self.number_bars / len(self.bar_color)))
-            if nextColor >= len(self.bar_color):
+            nextColor = (int)(i // (self.num_bars / len(self.bars_color)))
+            if nextColor >= len(self.bars_color):
                 break
-            painter.setPen(QPen(self.bar_color[nextColor]))
+            painter.setPen(QPen(self.bars_color[nextColor]))
             myPath = QPainterPath()
             myPath.moveTo(center)
             myPath.arcTo(boundingRect, startAngle +
                          i * sweepLength, sweepLength)
 
             myGradient = QLinearGradient(0, 0, self.width(), self.height())
-            myGradient.setColorAt(0.0, QColor(self.bar_color[nextColor]))
-            myGradient.setColorAt(1.0, QColor(self.bar_color[nextColor]))
+            myGradient.setColorAt(0.0, QColor(self.bars_color[nextColor]))
+            myGradient.setColorAt(1.0, QColor(self.bars_color[nextColor]))
 
             painter.setBrush(myGradient)
             painter.drawPath(myPath)
