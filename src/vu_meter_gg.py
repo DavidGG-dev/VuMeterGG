@@ -1,13 +1,13 @@
-"""Este módulo define un widget de un vúmetro de audio para PySide6
+"""This module defines an audio VU meter widget for PySide6
 
-El widget sirve para representar de manera gráfica los niveles de audio 
-captado a través de un micrófono en tiempo real
+The widget is used to graphically represent the audio levels
+captured through a microphone in real time
 
-Este widget puede ser promocionado y usado en QtDesigner para PySide6
+This widget can be promoted and used in QtDesigner for PySide6
 
-El widget tiene numerosos parámetros de configuración entre los que se 
-encuentran los que modifican la apariencia física y los que modifican la
-manera de recibir la señal de audio
+The widget has numerous configuration parameters among which are
+those that modify the physical appearance and those that modify the
+way of receiving the audio signal
 """
 import math
 import struct
