@@ -325,7 +325,7 @@ e (QPaintEvent): Paint event
             (self.max_detection_range - self.min_detection_level)
         num_elements_to_draw = int(volumen_normalizado * self.num_bars)
 
-        # dimensiones del lienzo
+        # canvas dimensions
         d_height = painter.device().height() - (self.bars_padding * 2)
         d_width = painter.device().width() - (self.bars_padding * 2)
 
@@ -417,20 +417,20 @@ d_width (int): Width of the canvas
 num_elements_to_draw (int): Number of bars to be painted
 brush (QBrush): Brush used to paint the graphical representation of the audio on the VU meter
 '''
-        # divisiones del lienzo
+        # canvas divisions
         step_size_vertical = d_height / self.num_bars
         setp_size_horizontal = d_width / self.num_bars
-        # alto barras
+        # high bars
         bar_height_vertical = step_size_vertical * self.bars_solid_percentage
         bar_height_horizontal = setp_size_horizontal * self.bars_solid_percentage
-        # Espacio entre barras
+        # Space between bars
         bar_spacer_vertical = (step_size_vertical - bar_height_vertical) / 2
         bar_spacer_horizontal = (
             setp_size_horizontal - bar_height_horizontal) / 2
 
         for n in range(num_elements_to_draw):
             nextColor = (int)(n // (self.num_bars / len(self.bars_color)))
-            # Un color por barra
+            # One color per bar
             brush.setColor(QColor(self.bars_color[nextColor]))
             if self.bars_direction == 0:
                 rect = QRect(
@@ -512,13 +512,13 @@ d_width (int): Width of the canvas
 brush (QBrush): Brush used to paint the graphical representation of the audio on the VU meter
 normalized_volume (float): Volume to display scaled between zero and one
 '''
-        # divisiones del lienzo
+        # canvas divisions
         step_size_vertical = d_height / self.num_bars
         setp_size_horizontal = d_width / self.num_bars
         # alto barras
         bar_height_vertical = step_size_vertical * self.bars_solid_percentage
         bar_height_horizontal = setp_size_horizontal * self.bars_solid_percentage
-        # Espacio entre barras
+        # Space between bars
         bar_spacer_vertical = (step_size_vertical - bar_height_vertical) / 2
         bar_spacer_horizontal = (
             setp_size_horizontal - bar_height_horizontal) / 2
@@ -532,7 +532,7 @@ normalized_volume (float): Volume to display scaled between zero and one
 
         for n in range(len(self.volume_spectrum)):
             nextColor = (int)(n // (self.num_bars / len(self.bars_color)))
-            # Un color por barra
+            # One color per bar
             brush.setColor(QColor(self.bars_color[nextColor]))
             if self.bars_direction == 0:
                 rect = QRect(
