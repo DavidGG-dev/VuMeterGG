@@ -1,13 +1,13 @@
-"""Este módulo define un widget de un vúmetro de audio para PySide6
+"""This module defines an audio VU meter widget for PySide6
 
-El widget sirve para representar de manera gráfica los niveles de audio 
-captado a través de un micrófono en tiempo real
+The widget is used to graphically represent the audio levels
+captured through a microphone in real time
 
-Este widget puede ser promocionado y usado en QtDesigner para PySide6
+This widget can be promoted and used in QtDesigner for PySide6
 
-El widget tiene numerosos parámetros de configuración entre los que se 
-encuentran los que modifican la apariencia física y los que modifican la
-manera de recibir la señal de audio
+The widget has numerous configuration parameters among which are
+those that modify the physical appearance and those that modify the
+way of receiving the audio signal
 """
 import math
 import struct
@@ -22,33 +22,33 @@ from PySide6.QtWidgets import QLCDNumber, QWidget
 
 
 class VUMeterGG(QWidget):
-    ''' Clase que representa al módulo entero
+    ''' Class representing the entire module
 
-    En esta clase se encuentra todos los atributos y funciones usadas
-    para el funcionamiento del widget y que permiten cambiar su comportamiento
+This class contains all the attributes and functions used
+for the operation of the widget and that allow you to change its behavior
 
-    Args:
-        QWidget (QWidget): Clase de la que hereda y que permite usarla como un widget
+Args:
+QWidget (QWidget): Class from which it inherits and that allows it to be used as a widget
 
-    Attributes:
-        SAMPLE_RATE (int): Frecuencia de muestreo del audio
-        INPUT_BLOCK_TIME (float): Tiempo que se tarda en captar el audio
-        INPUT_FRAMES_PER_BLOCK (int): Numero de frames que se captan en el tiempo INPUT_BLOCK_TIME
-        vu_meter_on (bool): Indica si el vúmetro está activo
-        vu_meter_style (int): Indica el estilo de vúmetro que se quiere
-        bars_direction (int): Indica la dirección de las barras del vúmetro
-        num_bars (int): Numero de barras que se quieren mostrar
-        calibration_db (int): Factor de escala que se le quiere aplicar al audio captado por el micrófono
-        max_detection_range (int): Rango máximo de volumen que se quiere representar gráficamente en el vúmetro
-        min_detection_level (int): Valor mínimo de detección del vúmetro
-        volume_level (int): Volumen normalizado actual del vúmetro
-        volume_spectrum (list of int): Lista que guarda el espectro de volumen
-        bars_padding (int): Espacio entre la representación gráfica del audio y el borde del lienzo
-        bars_solid_percentage (float): Porcentaje de espacio entre barras
-        background_color (str): Color de fondo del vúmetro
-        bars_color (str): Color de la representación grafica del audio
-        configuration_update (bool): Controla que el estilo ESPECTRO se actualice correctamente al realizar cambios en la configuración
-    '''
+Attributes:
+SAMPLE_RATE (int): Audio sampling frequency
+INPUT_BLOCK_TIME (float): Time taken to capture the audio
+INPUT_FRAMES_PER_BLOCK (int): Number of frames captured in the INPUT_BLOCK_TIME time
+vu_meter_on (bool): Indicates whether the vu meter is active
+vu_meter_style (int): Indicates the desired vu meter style
+bars_direction (int): Indicates the direction of the vu meter bars
+num_bars (int): Number of bars to be displayed
+calibration_db (int): Scale factor to be applied to the audio captured by the microphone
+max_detection_range (int): Maximum volume range to be represented graphically in the VU meter
+min_detection_level (int): Minimum detection value of the VU meter
+volume_level (int): Current normalized volume of the VU meter
+volume_spectrum (list of int): List that stores the volume spectrum
+bars_padding (int): Space between the graphical representation of the audio and the edge of the canvas
+bars_solid_percentage (float): Percentage of space between bars
+background_color (str): Background color of the VU meter
+bars_color (str): Color of the graphical representation of the audio
+configuration_update (bool): Controls that the SPECTRUM style is updated correctly when changes are made to the configuration
+'''
     SAMPLE_RATE = 44000
     INPUT_BLOCK_TIME = 0.1  
     INPUT_FRAMES_PER_BLOCK = int(SAMPLE_RATE*INPUT_BLOCK_TIME)
@@ -68,40 +68,40 @@ class VUMeterGG(QWidget):
     configuration_update = False
 
     class VUMeterStyle(Enum):
-        '''Clase de Enum para elegir el tipo de vúmetro
+        '''Enum class to choose the type of VU meter
 
-            Args:
-                Enum (Enum): Clase de la que hereda para hacer una clase enum con constantes
+Args:
+Enum (Enum): Class from which it inherits to make an enum class with constants
 
-            Attributes:
-                BARS (int): Indica que el estilo de vúmetro es el de barras
-                CIRCLES (int): Indica que el estilo de vúmetro es el de círculos
-                SPECTRUM (int): Indica que el estilo de vúmetro es el de un espectrograma de audio
-                ANGLE (int): Indica que el estilo de vúmetro es el de ángulo
-        '''
+Attributes:
+BARS (int): Indicates that the VU meter style is bars
+CIRCLES (int): Indicates that the VU meter style is circles
+SPECTRUM (int): Indicates that the VU meter style is an audio spectrogram
+ANGLE (int): Indicates that the VU meter style is angle
+'''
         BARS = 0
         CIRCLES = 1
         SPECTRUM = 2
         ANGLE = 3
 
     class VUMeterBarsDirection(Enum):
-        '''Clase de Enum para elegir la dirección del vúmetro
-            Args:
-                Enum (Enum): Clase de la que hereda para hacer una clase enum con constantes
+      '''Enum class to choose the direction of the VU meter
+Args:
+Enum (Enum): Class from which it inherits to make an enum class with constants
 
-            Attributes:
-                UP (int): Indica que la dirección del vúmetro es hacia arriba
-                RIGHT (int): Indica que la dirección del vúmetro es hacia la derecha
-                DOWN (int): Indica que la dirección del vúmetro es hacia abajo
-                LEFT (int): Indica que la dirección del vúmetro es hacia la izquierda
-        '''
+Attributes:
+UP (int): Indicates that the direction of the VU meter is upwards
+RIGHT (int): Indicates that the direction of the VU meter is to the right
+DOWN (int): Indicates that the direction of the VU meter is downwards
+LEFT (int): Indicates that the direction of the VU meter is to the left
+'''
         UP = 0
         RIGHT = 1
         DOWN = 2
         LEFT = 3
 
     def __init__(self, *args, **kwargs):
-        '''Llama a dos funciones para crear un objeto QLCDNumber e inicializa el vúmetro'''
+        '''Calls two functions to create a QLCDNumber object and initializes the VU meter'''
         super().__init__(*args, **kwargs)
         self.__init__lcd()
         self.activate_vu_meter()
@@ -119,47 +119,47 @@ class VUMeterGG(QWidget):
         self.lcd_volume.setProperty("intValue", 0)
 
     def get_volume_level(self) -> int:
-        """Obtiene el volumen normalizado actual del vúmetro
+        """Gets the current normalized volume of the VU meter
 
-        Returns:
-            int: El volumen actual del vúmetro
-        """
+Returns:
+int: The current volume of the VU meter
+"""
         return self.volume_level
 
     def set_lcd_calibration_db(self, calibration_db: int):
-        """Cambia el factor de escala que se usa para normalizar el volumen
+       """Change the scale factor used to normalize the volume
 
-        Esto sirve para calibrar el micrófono y que el valor calculado se aproxime lo máximo posible al real
+This is used to calibrate the microphone so that the calculated value is as close as possible to the real value
 
-        Args:
-            calibration_db (int): Factor de escala que se le quiere aplicar al audio captado por el micrófono
-        """
+Args:
+calibration_db (int): Scale factor that you want to apply to the audio captured by the microphone
+"""
         if calibration_db < 1:
             calibration_db = 1
         self.calibration_db = calibration_db
 
     def set_max_calibration_range(self, max_detection_range: int):
-        """Cambia rango máximo de volumen que se quiere representar gráficamente en el vúmetro
+       """Change the maximum volume range that you want to represent graphically on the VU meter
 
-        Esto sirve para calibrar el vúmetro y que muestre el rango de volumen que se desee, apreciando más o menos detalle en la variación de volumen en la representación grafica.
+This is used to calibrate the VU meter and display the desired volume range, showing more or less detail in the volume variation in the graphical representation.
 
-        Args:
-            max_detection_range (int): Range máximo de volumen que se quiere representar gráficamente en el vúmetro
-        """
+Args:
+max_detection_range (int): Maximum volume range that you want to represent graphically on the VU meter
+"""
         if max_detection_range < 1:
             max_detection_range = 1
         self.detection_range = max_detection_range
 
     def set_background_color(self, color: str):
-        """Cambia el color de fondo del vúmetro
+        """Change the background color of the VU meter
 
-        El método recibe un String con el color en formato hexadecimal y lo establece como el color de fondo del vúmetro
+The method receives a String with the color in hexadecimal format and sets it as the background color of the VU meter
 
-        En caso de que el String no sea un color valido, no se hace ningún cambio
+If the String is not a valid color, no change is made
 
-        Args:
-            color (str): Color en formato hexadecimal
-        """
+Args:
+color (str): Color in hexadecimal format
+"""
         if not re.match('^#(?:[0-9a-fA-F]{3}){1,2}$', color):
             return
         self.background_color = color
@@ -167,19 +167,19 @@ class VUMeterGG(QWidget):
         self.update()
 
     def set_bars_color(self, color: str):
-        """Cambia el color del vúmetro
+        """Change the color of the VU meter
 
-        Cambia el color de la representación gráfica del audio captado por el micrófono
+Changes the color of the graphical representation of the audio captured by the microphone
 
-        El método recibe un String con uno o varios colores en formato hexadecimal separados por comas y lo establece como el/los colores usados para representar el audio
+The method receives a String with one or more colors in hexadecimal format separated by commas and sets it as the color(s) used to represent the audio
 
-        En caso de que el String no contenga un color valido, no se hace ningún cambio
+If the String does not contain a valid color, no change is made
 
-        El color/colores se guardan como un array de Strings con los colores en formato hexadecimal
+The color/colors are saved as an array of Strings with the colors in hexadecimal format
 
-        Args:
-            color (str): Color en formato hexadecimal
-        """
+Args:
+color (str): Color in hexadecimal format
+"""
         array_color = color.split(',')
         for i in range(len(array_color)):
             array_color[i] = array_color[i].strip()
@@ -190,13 +190,13 @@ class VUMeterGG(QWidget):
         self.update()
 
     def set_max_elements(self, elements: int):
-        """Recibe el número de máximo elementos que se quieren mostrar en el vúmetro
+        """Receives the maximum number of elements to be displayed in the VU meter
 
-        En el caso del estilo vúmetro barras, este número indica el número máximo de barras que se quieren mostrar
+In the case of the bars VU meter style, this number indicates the maximum number of bars to be displayed
 
-        Args:
-            elements (int): número de elementos que representan el volumen
-        """
+Args:
+elements (int): number of elements representing the volume
+"""
         if elements < 1:
             elements = 1
         self.num_bars = elements
@@ -205,13 +205,13 @@ class VUMeterGG(QWidget):
         self.update()
 
     def set_solid_percentage(self, percent: float):
-        '''Cambia el porcentaje de espacio entre barras
+        '''Change the percentage of space between bars
 
-        Este método recibe un numero entre 0 y 1 que indica el porcentaje de espacio que se quiere entre las barras del vúmetro
+This method receives a number between 0 and 1 that indicates the percentage of space that is wanted between the bars of the VU meter
 
-        Args:
-            percent (float): Porcentaje de espacio entre barras
-        '''
+Args:
+percent (float): Percentage of space between bars
+'''
         if percent < 0.1:
             percent = 0.1
         elif percent > 0.9:
@@ -221,25 +221,25 @@ class VUMeterGG(QWidget):
         self.update()
 
     def set_bars_direction(self, direction: VUMeterBarsDirection):
-        '''Cambia la dirección del vúmetro en los estilos que permiten esta configuración
+       '''Change the direction of the VUMeter in the styles that allow this configuration
 
-        Este método recibe un objeto de la clase VUMeterBarsDirection que indica la dirección que desde donde parte la representación grafica del audio
+This method receives an object of the VUMeterBarsDirection class that indicates the direction from which the graphical representation of the audio starts
 
-        Args:
-            direction (VUMeterBarsDirection): Dirección del vúmetro
-        '''
+Args:
+direction (VUMeterBarsDirection): Direction of the VUMeter
+'''
         self.bars_direction = direction.value
         self.configuration_update = True
         self.update()
 
     def set_min_detection_level(self, min_detection_level: int):
-        '''Cambia el valor mínimo de detección del vúmetro
+       '''Change the minimum detection value of the VU meter
 
-        Cambia el valor mínimo de detección del vúmetro, es decir, el valor mínimo que se quiere que se represente gráficamente
+Changes the minimum detection value of the VU meter, that is, the minimum value that you want to be represented graphically
 
-        Args:
-            min_detection_level (int): Valor mínimo de detección del vúmetro
-        '''
+Args:
+min_detection_level (int): Minimum detection value of the VU meter
+'''
         if min_detection_level < 0:
             min_detection_level = 0
 
@@ -248,13 +248,13 @@ class VUMeterGG(QWidget):
         self.update()
 
     def set_detection_speed(self, speed: int):
-        '''Cambia la velocidad de detección del vúmetro
+        '''Change the VU meter detection speed
 
-        Cambia la velocidad de detección del vúmetro, es decir, el tiempo que se tarda en actualizar la representación grafica del audio
+Changes the VU meter detection speed, i.e. the time it takes to update the graphical representation of the audio
 
-        Args:
-            speed (int): Velocidad de detección del vúmetro
-        '''
+Args:
+speed (int): VU meter detection speed
+'''
         if speed < 1:
             speed = 1
         elif speed > 25:
@@ -264,43 +264,43 @@ class VUMeterGG(QWidget):
         self.INPUT_FRAMES_PER_BLOCK = int(self.SAMPLE_RATE * self.INPUT_BLOCK_TIME)
 
     def activate_vu_meter(self):
-        '''Activa el vúmetro.
+        '''Activates the VU meter.
 
-        Si el vúmetro no está ya activo, inicia un nuevo hilo que ejecuta el método _start_audio_capture del vúmetro
-        '''
+If the VU meter is not already active, starts a new thread that executes the VU meter's _start_audio_capture method.
+'''
         if not self.vu_meter_on:
             hilo_vumetro = threading.Thread(target=self._start_audio_capture)
             hilo_vumetro.start()
             self.vu_meter_on = True
 
     def deactivate_vu_meter(self):
-        '''Detiene el vúmetro
+       '''Stops the VU meter
 
-        Establece la variable vu_meter_on a False para que el hilo que ejecuta el método _start_audio_capture del vúmetro termine
-        '''
+Sets the vu_meter_on variable to False so that the thread executing the VU meter's _start_audio_capture method will terminate
+'''
         self.vu_meter_on = False
 
     def change_vu_meter_style(self, style: VUMeterStyle):
-        '''Cambia el estilo del vúmetro
+        '''Change the style of the VUMeter
 
-        Este método recibe un objeto de la clase VUMeterStyle que indica el estilo que se quiere para el vúmetro
+This method receives an object of the VUMeterStyle class that indicates the style that is desired for the VUMeter
 
-        Args:
-            style (VUMeterStyle): Estilo que se quiere para el vúmetro
-        '''
+Args:
+style (VUMeterStyle): Style that is desired for the VUMeter
+'''
         self.vu_meter_style = style.value
         self.update()
 
     def paintEvent(self, e):
-        '''Método sobrescrito de QWidget para actualizar la representación gráfica del vúmetro
+       '''QWidget override method to update the VU meter graphical representation
 
-        El método pinta la representación gráfica del audio en el vúmetro según el estilo que se haya elegido
+The method paints the graphical representation of the audio on the VU meter according to the chosen style
 
-        Usa las variables de configuración del vúmetro para pintar la representación gráfica del audio según el estilo que se haya elegido
+Uses the VU meter configuration variables to paint the graphical representation of the audio according to the chosen style
 
-        Args:
-            e (QPaintEvent): Evento de pintado
-        '''
+Args:
+e (QPaintEvent): Paint event
+'''
         painter = QPainter(self)
 
         brush = QBrush()
@@ -325,7 +325,7 @@ class VUMeterGG(QWidget):
             (self.max_detection_range - self.min_detection_level)
         num_elements_to_draw = int(volumen_normalizado * self.num_bars)
 
-        # dimensiones del lienzo
+        # canvas dimensions
         d_height = painter.device().height() - (self.bars_padding * 2)
         d_width = painter.device().width() - (self.bars_padding * 2)
 
@@ -341,11 +341,11 @@ class VUMeterGG(QWidget):
         painter.end()
 
     def _calculate_volume(self, audio_data):
-        '''Método que calcula el volumen del audio captado por el micrófono
+        '''Method that calculates the volume of the audio captured by the microphone
 
-        Args:
-            audio_data (bytes): Datos de audio captados por el micrófono
-        '''
+Args:
+audio_data (bytes): Audio data captured by the microphone
+'''
         NORMALIZE_FACTOR = 1.0 / 32768.0
         num_samples = len(audio_data) / 2
         audio_samples = struct.unpack("%dh" %num_samples, audio_data)
@@ -353,18 +353,18 @@ class VUMeterGG(QWidget):
         return math.sqrt(sum_of_squares / num_samples)
 
     def _start_audio_capture(self):
-        '''Método que se ejecuta en un hilo para captar el audio del micrófono y calcular el volumen
+        '''Method that runs in a thread to capture microphone audio and calculate volume
 
-        Este método se ejecuta en un hilo para que no bloquee la interfaz gráfica y pueda seguir funcionando mientras se captura el audio del micrófono y se calcula el volumen
+This method runs in a thread so that it does not block the graphical interface and can continue to run while the microphone audio is being captured and the volume is being calculated
 
-        El método usa la librería PyAudio para captar el audio del micrófono y la clase Amplitude para calcular el volumen del audio captado
+The method uses the PyAudio library to capture microphone audio and the Amplitude class to calculate the volume of the captured audio
 
-        El volumen calculado se asigna al QLCDNumber self.lcd_volume y se actualiza la representación gráfica del audio en el vúmetro
+The calculated volume is assigned to the QLCDNumber self.lcd_volume and the graphical representation of the audio in the vu meter is updated
 
-        El método termina cuando la variable vu_meter_on es False
+The method ends when the vu_meter_on variable is False
 
-        Llama a la función update para actualizar la representación gráfica del audio en el vúmetro
-        '''
+Calls the update function to update the graphical representation of the audio in the vu meter
+'''
         audio = pyaudio.PyAudio()
         try:
 
@@ -394,11 +394,11 @@ class VUMeterGG(QWidget):
                     self.update()
 
                 except IOError as e:
-                    print(f"Error al leer el audio: {e}")
+                    print(f"Error reading audio: {e}")
                     continue
 
         except Exception as e:
-            print(f"Error al abrir el stream de audio: {e}")
+            print(f"Error opening audio stream: {e}")
 
         finally:
             stream.stop_stream()
@@ -406,31 +406,31 @@ class VUMeterGG(QWidget):
             audio.terminate()
 
     def _paint_bars(self, painter: QPainter, d_height: int, d_width: int, num_elements_to_draw: int, brush: QBrush):
-        '''Pinta la representación gráfica del audio en el vúmetro según el estilo de barras
+       '''Paints the graphical representation of the audio on the VU meter according to the bar style
 
-        Este método pinta la representación gráfica del audio en el vúmetro según el estilo de barras y las variables de configuración del vúmetro que se hayan elegido
+This method paints the graphical representation of the audio on the VU meter according to the bar style and the VU meter configuration variables that have been chosen
 
-        Args:
-            painter (QPainter): Objeto que se usa para pintar la representación gráfica del audio en el vúmetro
-            d_height (int): Altura del lienzo
-            d_width (int): Ancho del lienzo
-            num_elements_to_draw (int): Numero de barras que se quieren pintar
-            brush (QBrush): Pincel que se usa para pintar la representación gráfica del audio en el vúmetro
-        '''
-        # divisiones del lienzo
+Args:
+painter (QPainter): Object used to paint the graphical representation of the audio on the VU meter
+d_height (int): Height of the canvas
+d_width (int): Width of the canvas
+num_elements_to_draw (int): Number of bars to be painted
+brush (QBrush): Brush used to paint the graphical representation of the audio on the VU meter
+'''
+        # canvas divisions
         step_size_vertical = d_height / self.num_bars
         setp_size_horizontal = d_width / self.num_bars
-        # alto barras
+        # high bars
         bar_height_vertical = step_size_vertical * self.bars_solid_percentage
         bar_height_horizontal = setp_size_horizontal * self.bars_solid_percentage
-        # Espacio entre barras
+        # Space between bars
         bar_spacer_vertical = (step_size_vertical - bar_height_vertical) / 2
         bar_spacer_horizontal = (
             setp_size_horizontal - bar_height_horizontal) / 2
 
         for n in range(num_elements_to_draw):
             nextColor = (int)(n // (self.num_bars / len(self.bars_color)))
-            # Un color por barra
+            # One color per bar
             brush.setColor(QColor(self.bars_color[nextColor]))
             if self.bars_direction == 0:
                 rect = QRect(
@@ -470,16 +470,16 @@ class VUMeterGG(QWidget):
                 painter.fillRect(rect, brush)
 
     def _paint_circles(self, painter: QPainter, d_height: int, d_width: int, num_elements_to_draw: int):
-        '''Pinta la representación gráfica del audio en el vúmetro según el estilo de círculos
+'''Paints the graphical representation of the audio on the VU meter according to the circle style
 
-        Este método pinta la representación gráfica del audio en el vúmetro según el estilo de círculos y las variables de configuración del vúmetro que se hayan elegido
+This method paints the graphical representation of the audio on the VU meter according to the circle style and the VU meter configuration variables that have been chosen
 
-        Args:
-            painter (QPainter): Objeto que se usa para pintar la representación gráfica del audio en el vúmetro
-            d_height (int): Altura del lienzo
-            d_width (int): Ancho del lienzo
-            num_elements_to_draw (int): Numero de círculos que se quieren pintar
-        '''
+Args:
+painter (QPainter): Object used to paint the graphical representation of the audio on the VU meter
+d_height (int): Height of the canvas
+d_width (int): Width of the canvas
+num_elements_to_draw (int): Number of circles to be painted
+'''
         diametroMax = min(d_height, d_width) - 2 * self.bars_padding
         step_size = (diametroMax/2) / self.num_bars
         width_pen = step_size * self.bars_solid_percentage
@@ -501,24 +501,24 @@ class VUMeterGG(QWidget):
             )
 
     def _paint_spectrum(self, painter: QPainter, d_height: int, d_width: int, brush: QBrush, volumen_normalizado: float):
-        '''Pinta la representación gráfica del audio en el vúmetro según el estilo de espectro
+        '''Paints the graphical representation of the audio on the VU meter according to the spectrum style
 
-        Este método pinta la representación gráfica del audio en el vúmetro según el estilo de espectro y las variables de configuración del vúmetro que se hayan elegido
+This method paints the graphical representation of the audio on the VU meter according to the spectrum style and the VU meter configuration variables that have been chosen
 
-        Args:
-            painter (QPainter): Objeto que se usa para pintar la representación gráfica del audio en el vúmetro
-            d_height (int): Altura del lienzo
-            d_width (int): Ancho del lienzo
-            brush (QBrush): Pincel que se usa para pintar la representación gráfica del audio en el vúmetro
-            volumen_normalizado (float): Volumen a mostrar escalado entre cero y uno
-        '''
-        # divisiones del lienzo
+Args:
+painter (QPainter): Object used to paint the graphical representation of the audio on the VU meter
+d_height (int): Height of the canvas
+d_width (int): Width of the canvas
+brush (QBrush): Brush used to paint the graphical representation of the audio on the VU meter
+normalized_volume (float): Volume to display scaled between zero and one
+'''
+        # canvas divisions
         step_size_vertical = d_height / self.num_bars
         setp_size_horizontal = d_width / self.num_bars
         # alto barras
         bar_height_vertical = step_size_vertical * self.bars_solid_percentage
         bar_height_horizontal = setp_size_horizontal * self.bars_solid_percentage
-        # Espacio entre barras
+        # Space between bars
         bar_spacer_vertical = (step_size_vertical - bar_height_vertical) / 2
         bar_spacer_horizontal = (
             setp_size_horizontal - bar_height_horizontal) / 2
@@ -532,7 +532,7 @@ class VUMeterGG(QWidget):
 
         for n in range(len(self.volume_spectrum)):
             nextColor = (int)(n // (self.num_bars / len(self.bars_color)))
-            # Un color por barra
+            # One color per bar
             brush.setColor(QColor(self.bars_color[nextColor]))
             if self.bars_direction == 0:
                 rect = QRect(
@@ -572,16 +572,16 @@ class VUMeterGG(QWidget):
                 painter.fillRect(rect, brush)
 
     def _paint_angle(self, painter: QPainter, d_height: int, d_width: int, volumen_normalizado: float):
-        '''Pinta la representación gráfica del audio en el vúmetro según el estilo de ángulo
+       '''Paints the graphical representation of the audio on the VU meter according to the angle style
 
-        Este método pinta la representación gráfica del audio en el vúmetro según el estilo de ángulo y las variables de configuración del vúmetro que se hayan elegido
+This method paints the graphical representation of the audio on the VU meter according to the angle style and the VU meter configuration variables that have been chosen
 
-        Args:
-            painter (QPainter): Objeto que se usa para pintar la representación gráfica del audio en el vúmetro
-            d_height (int): Altura del lienzo
-            d_width (int): Ancho del lienzo
-            volumen_normalizado (float): Volumen a mostrar escalado entre cero y uno
-            '''
+Args:
+painter (QPainter): Object used to paint the graphical representation of the audio on the VU meter
+d_height (int): Height of the canvas
+d_width (int): Width of the canvas
+normalized_volume (float): Volume to display scaled between zero and one
+'''
         diametroMax = min(d_height, d_width) - 2 * self.bars_padding
         center = QPoint(d_width / 2 + self.bars_padding,
                         d_height / 2 + self.bars_padding)
