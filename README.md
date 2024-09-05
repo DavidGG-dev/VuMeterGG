@@ -50,6 +50,7 @@ Thanks go to these wonderful people ([emoji key](https://allcontributors.org/doc
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/DavidGG-dev"><img src="https://avatars.githubusercontent.com/u/113294479?v=4?s=100" width="100px;" alt="David García González"/><br /><sub><b>David García González</b></sub></a><br /><a href="#maintenance-DavidGG-dev" title="Maintenance">🚧</a> <a href="#code-DavidGG-dev" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://www.josval.xyz"><img src="https://avatars.githubusercontent.com/u/105240557?v=4?s=100" width="100px;" alt="José Valentino"/><br /><sub><b>José Valentino</b></sub></a><br /><a href="#ideas-josvaal" title="Ideas, Planning, & Feedback">🤔</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Sarishc"><img src="https://avatars.githubusercontent.com/u/65647124?v=4?s=100" width="100px;" alt="Sarish Chavan"/><br /><sub><b>Sarish Chavan</b></sub></a><br /><a href="#doc-Sarishc" title="Documentation">📖</a></td>
     </tr>
   </tbody>
 </table>
